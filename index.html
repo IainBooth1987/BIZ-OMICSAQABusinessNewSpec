@@ -1,0 +1,3342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQA Business (7137/7138) Scheme of Work Planner v3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #9b4dca;
+        }
+
+        h1 {
+            color: #9b4dca;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .teacher-config-section {
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .teacher-config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .teacher-config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .teacher-config-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .teacher-config-item label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .teacher-config-item input[type="number"] {
+            width: 100%;
+        }
+
+        .teacher-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #9b4dca;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+
+        .teacher-section.hidden {
+            display: none !important;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="number"], select, input[type="text"], input[type="date"] {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, select:focus, input[type="text"]:focus, input[type="date"]:focus {
+            outline: none;
+            border-color: #9b4dca;
+        }
+
+        .school-info-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .school-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .school-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-field label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-header h2 {
+            color: #9b4dca;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .calendar-table th,
+        .calendar-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .calendar-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .calendar-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .holiday-badge {
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .assessment-badge {
+            background: #ffc107;
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .add-event-btn {
+            background: #28a745;
+            margin-top: 15px;
+        }
+
+        .add-event-btn:hover {
+            background: #218838;
+        }
+
+        .event-row {
+            display: grid;
+            grid-template-columns: 100px 150px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .delete-event-btn {
+            background: #dc3545;
+            padding: 6px 12px;
+            font-size: 0.9em;
+        }
+
+        .delete-event-btn:hover {
+            background: #c82333;
+        }
+
+        .notes-section {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .quick-action-btn {
+            background: #e9ecef;
+            color: #495057;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .quick-action-btn:hover {
+            background: #dee2e6;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #9b4dca;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #7d3ba8;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .units-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+
+        .units-panel h2 {
+            color: #9b4dca;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .assessment-section {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .assessment-section h3 {
+            color: #ff9800;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .assessment-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .assessment-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .assessment-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: #fff9e6;
+        }
+
+        .assessment-item.selected {
+            background: #ffe8cc;
+            border-left: 4px solid #e65100;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .assessment-item.selected::after {
+            content: '✓ Selected';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: #ff9800;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .assessment-item-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 4px;
+        }
+
+        .assessment-item-desc {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .custom-assessment-form {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .custom-assessment-form.show {
+            display: block;
+        }
+
+        .custom-assessment-form input,
+        .custom-assessment-form select {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .custom-assessment-form button {
+            width: 100%;
+            background: #ff9800;
+            padding: 8px;
+        }
+
+        .custom-assessment-form button:hover {
+            background: #e65100;
+        }
+
+        .add-custom-assessment-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .add-custom-assessment-btn:hover {
+            background: #e65100;
+        }
+
+        .unit-section {
+            margin-bottom: 20px;
+        }
+
+        .unit-header {
+            background: #9b4dca;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .unit-header:hover {
+            background: #7d3ba8;
+        }
+
+        .unit-header.as-only {
+            background: #28a745;
+        }
+
+        .unit-header.as-only:hover {
+            background: #218838;
+        }
+
+        .unit-header.a-level-only {
+            background: #dc3545;
+        }
+
+        .unit-header.a-level-only:hover {
+            background: #c82333;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .subunits {
+            display: none;
+            padding: 10px 0 0 0;
+        }
+
+        .subunits.show {
+            display: block;
+        }
+
+        .subsection-header {
+            background: #e9ecef;
+            padding: 10px 12px;
+            margin: 8px 0 4px 0;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.95em;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .subsection-header:hover {
+            background: #dee2e6;
+        }
+
+        .subsection-icon {
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .subsection-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .topic-items {
+            display: none;
+            padding-left: 10px;
+        }
+
+        .topic-items.show {
+            display: block;
+        }
+
+        .subunit-item {
+            background: white;
+            padding: 10px 12px;
+            margin: 5px 0;
+            border-radius: 6px;
+            border-left: 4px solid #9b4dca;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .subunit-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: #f8f9fa;
+        }
+
+        .subunit-item.selected {
+            background: #e8d5f2;
+            border-left: 4px solid #7d3ba8;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(155, 77, 202, 0.3);
+        }
+
+        .subunit-item.selected::after {
+            content: '✓ Selected';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: #9b4dca;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .subunit-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+            font-size: 0.9em;
+        }
+
+        .subunit-desc {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .planning-area {
+            background: #fff;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        .planning-area h2 {
+            color: #9b4dca;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .teacher-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .teacher-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .teacher-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .week-blocks {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .week-block {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            transition: all 0.3s;
+        }
+
+        .week-block:hover {
+            border-color: #adb5bd;
+        }
+
+        .week-block.selectable {
+            cursor: pointer;
+            border-color: #9b4dca;
+            background: #f8f3ff;
+        }
+
+        .week-block.selectable:hover {
+            border-color: #7d3ba8;
+            background: #f0e5ff;
+            transform: scale(1.02);
+        }
+
+        .selection-mode-banner {
+            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .selection-mode-banner.active {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+
+        .cancel-selection-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-left: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .cancel-selection-btn:hover {
+            background: white;
+            color: #9b4dca;
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .week-number {
+            font-weight: 600;
+            color: #9b4dca;
+        }
+
+        .lessons-count {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .week-content {
+            min-height: 60px;
+        }
+
+        .week-block.drag-over {
+            border-color: #9b4dca;
+            background: #f8f3ff;
+        }
+
+        .planned-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: grab;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .planned-item:active {
+            cursor: grabbing;
+        }
+
+        .planned-item:hover {
+            transform: scale(1.02);
+        }
+
+        .planned-item.assessment-type {
+            background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%);
+        }
+
+        .planned-item.assessment-type .planned-item-title::before {
+            content: '📝 ';
+        }
+
+        .planned-item-content {
+            flex: 1;
+        }
+
+        .planned-item-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .planned-item-desc {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .remove-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #9b4dca;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-color.both {
+            background: #9b4dca;
+        }
+
+        .legend-color.as {
+            background: #28a745;
+        }
+
+        .legend-color.alevel {
+            background: #dc3545;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            background: #e9ecef;
+            color: #495057;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: #9b4dca;
+            color: white;
+            border-color: #9b4dca;
+        }
+
+        .view-btn:hover {
+            border-color: #9b4dca;
+        }
+
+        /* Year Tabs */
+        .year-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #9b4dca;
+        }
+
+        .year-tab-btn {
+            padding: 12px 28px;
+            background: #e9ecef;
+            color: #495057;
+            border: 2px solid #dee2e6;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1em;
+            transition: all 0.2s;
+            margin-right: 4px;
+        }
+
+        .year-tab-btn.active {
+            background: #9b4dca;
+            color: white;
+            border-color: #9b4dca;
+        }
+
+        .year-tab-btn:hover:not(.active) {
+            background: #d4b8f0;
+            border-color: #9b4dca;
+        }
+
+        .year-panel {
+            display: none;
+        }
+
+        .year-panel.active {
+            display: block;
+        }
+
+        /* Drag-and-drop styles for planned items */
+        .planned-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+
+        .planned-item.drag-target-above::before {
+            content: '';
+            display: block;
+            height: 4px;
+            background: #9b4dca;
+            border-radius: 2px;
+            margin-bottom: 4px;
+        }
+
+        .planned-item.drag-target-below::after {
+            content: '';
+            display: block;
+            height: 4px;
+            background: #9b4dca;
+            border-radius: 2px;
+            margin-top: 4px;
+        }
+
+        .week-content.drag-over-empty {
+            background: #f0e5ff;
+            border-radius: 6px;
+            border: 2px dashed #9b4dca;
+            min-height: 60px;
+        }
+
+        .overview-panel {
+            display: none;
+        }
+
+        .overview-panel.active {
+            display: block;
+        }
+
+        .timeline-view {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .timeline-track {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .teacher-timeline {
+            margin-bottom: 30px;
+        }
+
+        .teacher-timeline-header {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .timeline-bar {
+            display: flex;
+            gap: 2px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            min-height: 60px;
+            flex-wrap: wrap;
+        }
+
+        .timeline-segment {
+            flex: 1;
+            min-width: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            padding: 8px;
+            color: white;
+            font-size: 0.75em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .timeline-segment:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .timeline-segment-tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            z-index: 100;
+        }
+
+        .timeline-segment:hover .timeline-segment-tooltip {
+            display: block;
+        }
+
+        .week-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 0 10px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+
+        .summary-card-header {
+            font-weight: 600;
+            color: #9b4dca;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .summary-card-content {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .teacher-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ─── COVERAGE PROGRESS BAR ─────────────────────────────── */
+        .coverage-bar-container {
+            margin: 15px 0;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        .coverage-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .coverage-bar-title {
+            font-weight: 700;
+            color: #495057;
+            font-size: 0.95em;
+        }
+        .coverage-bar-pct {
+            font-weight: 700;
+            color: #9b4dca;
+            font-size: 1.1em;
+        }
+        .coverage-bar-track {
+            background: #dee2e6;
+            border-radius: 8px;
+            height: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+        .coverage-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #9b4dca, #667eea);
+            border-radius: 8px;
+            transition: width 0.5s ease;
+            min-width: 0;
+        }
+        .coverage-bar-fill.warn {
+            background: linear-gradient(90deg, #ff9800, #ffb74d);
+        }
+        .coverage-bar-fill.ok {
+            background: linear-gradient(90deg, #28a745, #66bb6a);
+        }
+        .coverage-unit-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .coverage-unit-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.82em;
+        }
+        .coverage-unit-item .unit-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 4px;
+        }
+        .coverage-unit-item .unit-mini-bar {
+            background: #e9ecef;
+            border-radius: 4px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .coverage-unit-item .unit-mini-fill {
+            height: 100%;
+            background: #9b4dca;
+            border-radius: 4px;
+            transition: width 0.4s;
+        }
+        .coverage-unit-item .unit-count {
+            color: #888;
+            margin-top: 3px;
+        }
+
+        /* ─── TOAST NOTIFICATIONS ───────────────────────────────── */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.92em;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            max-width: 320px;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        .toast.info { background: #9b4dca; }
+        .toast.warning { background: #ff9800; color: #333; }
+
+        /* ─── AUTOSAVE INDICATOR ────────────────────────────────── */
+        .autosave-indicator {
+            font-size: 0.78em;
+            color: #aaa;
+            text-align: right;
+            padding: 4px 8px;
+        }
+        .autosave-indicator.saved { color: #28a745; }
+        .autosave-indicator.saving { color: #ff9800; }
+
+        /* ─── UNDO BUTTON ───────────────────────────────────────── */
+        .undo-btn {
+            background: #6c757d;
+        }
+        .undo-btn:hover { background: #545b62; }
+        .undo-btn:disabled {
+            background: #dee2e6;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* ─── LESSON ESTIMATE BADGE ─────────────────────────────── */
+        .lesson-est {
+            font-size: 0.72em;
+            background: #e9ecef;
+            color: #666;
+            padding: 1px 6px;
+            border-radius: 10px;
+            float: right;
+            margin-top: 2px;
+        }
+
+        /* ─── WEEK OVERLOAD WARNING ─────────────────────────────── */
+        .week-block.overloaded {
+            border-color: #dc3545 !important;
+        }
+        .week-block.overloaded .week-header {
+            background: #ffebee !important;
+        }
+        .overload-warning {
+            font-size: 0.75em;
+            color: #dc3545;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* ─── IMPROVED PRINT STYLES ─────────────────────────────── */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0;
+                font-size: 10pt;
+            }
+            .controls, .units-panel, .view-toggle, .selection-mode-banner, .modal,
+            .coverage-bar-container, #toast-container, .autosave-indicator,
+            .year-tabs, button:not(.print-keep) {
+                display: none !important;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 10px;
+                border-radius: 0;
+            }
+            header {
+                border-bottom: 2pt solid #9b4dca;
+                margin-bottom: 10pt;
+                padding-bottom: 8pt;
+            }
+            h1 { font-size: 16pt; color: #9b4dca !important; }
+            h2 { font-size: 12pt; }
+            h3 { font-size: 10pt; }
+            .school-info-panel {
+                display: block !important;
+                page-break-inside: avoid;
+                border: 1pt solid #ccc;
+                padding: 8pt;
+                margin-bottom: 10pt;
+            }
+            .school-info-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8pt;
+            }
+            .school-info-grid #schoolInfoGrid {
+                display: grid !important;
+            }
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .overview-panel { display: block !important; }
+            .week-view-panel { display: block !important; }
+            .year-panel { display: block !important; }
+            .teacher-sections {
+                grid-template-columns: 1fr 1fr;
+                page-break-inside: avoid;
+            }
+            .week-block {
+                page-break-inside: avoid;
+                margin-bottom: 6pt;
+                border: 1pt solid #ddd !important;
+                background: white !important;
+                padding: 6pt;
+                min-height: unset;
+            }
+            .planned-item {
+                background: #f0e5ff !important;
+                color: #333 !important;
+                padding: 4pt;
+                font-size: 8pt;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .planned-item.assessment-type {
+                background: #fff3e0 !important;
+                border-left: 3pt solid #ff9800 !important;
+            }
+            .remove-btn { display: none !important; }
+            .timeline-view { page-break-before: always; }
+            .summary-cards { page-break-inside: avoid; }
+            .stats {
+                page-break-inside: avoid;
+                grid-template-columns: repeat(4, 1fr);
+            }
+            input, select {
+                border: none !important;
+                background: transparent !important;
+                font-weight: 600;
+                padding: 0;
+            }
+            .week-number { color: #9b4dca !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        /* ─── MOBILE / TABLET RESPONSIVE ───────────────────────── */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .teacher-sections {
+                grid-template-columns: 1fr;
+            }
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; border-radius: 10px; }
+            h1 { font-size: 1.4em; }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-section {
+                flex-wrap: wrap;
+            }
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 10px;
+                gap: 10px;
+            }
+            .stat-number { font-size: 1.5em; }
+            .year-tab-btn { padding: 10px 16px; font-size: 0.9em; }
+            .units-panel { max-height: 400px; }
+            .teacher-sections { grid-template-columns: 1fr; }
+            .event-row {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+            }
+            .coverage-unit-breakdown {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 AQA Business Studies Scheme of Work Planner</h1>
+            <p class="subtitle">AS (7137) & A-Level (7138) | Teaching from September 2026 | v3</p>
+        </header>
+
+        <div class="school-info-panel">
+            <div class="school-info-header">
+                <h3 style="color: #9b4dca; margin: 0;">🏫 School Information</h3>
+                <button onclick="toggleSchoolInfo()" id="toggleSchoolInfoBtn">▼ Expand</button>
+            </div>
+            <div class="school-info-grid" id="schoolInfoGrid" style="display: none;">
+                <div class="info-field">
+                    <label>School Name</label>
+                    <input type="text" id="schoolName" placeholder="Your School Name">
+                </div>
+                <div class="info-field">
+                    <label>Department</label>
+                    <input type="text" id="department" value="Business Studies" placeholder="Department">
+                </div>
+                <div class="info-field">
+                    <label>Academic Year</label>
+                    <input type="text" id="academicYear" placeholder="e.g., 2026-2027">
+                </div>
+                <div class="info-field">
+                    <label>Course Start Date</label>
+                    <input type="date" id="courseStartDate">
+                </div>
+                <div class="info-field">
+                    <label>Teacher A Name</label>
+                    <input type="text" id="teacherAName" placeholder="Teacher A">
+                </div>
+                <div class="info-field">
+                    <label>Teacher B Name</label>
+                    <input type="text" id="teacherBName" placeholder="Teacher B">
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-section">
+                <div class="control-group">
+                    <label for="weeksInput">Number of Weeks:</label>
+                    <input type="number" id="weeksInput" min="1" max="52" value="36">
+                </div>
+                
+                <div class="control-group">
+                    <label for="lessonsPerWeek">Total Lessons per Week:</label>
+                    <input type="number" id="lessonsPerWeek" min="1" max="20" value="6">
+                </div>
+
+                <button onclick="generateWeeks()">Generate Schedule</button>
+            </div>
+
+            <div class="control-section">
+                <div class="control-group">
+                    <label for="qualLevel">Qualification Level:</label>
+                    <select id="qualLevel" onchange="filterUnits()">
+                        <option value="both">AS & A-Level</option>
+                        <option value="as">AS Only</option>
+                        <option value="alevel">A-Level Only</option>
+                    </select>
+                </div>
+
+                <button onclick="openCalendarModal()">📅 School Calendar</button>
+                <button onclick="openNotesModal()">📝 Scheme Notes</button>
+            </div>
+
+            <div class="control-section">
+                <button onclick="clearAll()">Clear All</button>
+                <button class="undo-btn" id="undoBtn" onclick="undoLastAction()" disabled title="Undo last action (Ctrl+Z)">↩ Undo</button>
+                <button onclick="exportData()">💾 Export JSON</button>
+                <button onclick="importData()">📂 Import JSON</button>
+                <button onclick="exportToPDF()">📄 Export PDF</button>
+                <button onclick="window.print()">🖨️ Print</button>
+                <button onclick="resetSavedData()" style="background:#dc3545;" title="Delete auto-saved data from this browser">🗑 Reset Saved</button>
+            </div>
+
+            <!-- Teacher Configuration Section -->
+            <div class="teacher-config-section">
+                <div class="teacher-config-header">
+                    <h4 style="margin: 0; color: #495057;">👥 Teacher Configuration</h4>
+                    <button onclick="toggleTeacherConfig()" id="toggleTeacherConfigBtn" style="background: #e9ecef; color: #495057;">▼ Expand</button>
+                </div>
+                
+                <div id="teacherConfigPanel" style="display: none;">
+                    <div class="teacher-config-grid">
+                        <!-- Teacher A Configuration -->
+                        <div class="teacher-config-item">
+                            <div class="teacher-toggle">
+                                <div class="toggle-switch active" id="teacherAToggle" onclick="toggleTeacher('A')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                                <label style="font-weight: 600; color: #495057; font-size: 1em;">Enable Teacher A</label>
+                            </div>
+                        </div>
+                        
+                        <div class="teacher-config-item">
+                            <label>Teacher A Lessons per Week</label>
+                            <input type="number" id="teacherALessons" min="0" max="20" value="3" onchange="updateTeacherLessons()">
+                        </div>
+
+                        <!-- Teacher B Configuration -->
+                        <div class="teacher-config-item">
+                            <div class="teacher-toggle">
+                                <div class="toggle-switch active" id="teacherBToggle" onclick="toggleTeacher('B')">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                                <label style="font-weight: 600; color: #495057; font-size: 1em;">Enable Teacher B</label>
+                            </div>
+                        </div>
+                        
+                        <div class="teacher-config-item">
+                            <label>Teacher B Lessons per Week</label>
+                            <input type="number" id="teacherBLessons" min="0" max="20" value="3" onchange="updateTeacherLessons()">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 6px; border-left: 4px solid #2196f3;">
+                        <small style="color: #0d47a1;">
+                            <strong>💡 Tip:</strong> Toggle teachers on/off for single-teacher courses. Adjust lessons per week to split teaching time. Total must equal "Total Lessons per Week" above.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color both"></div>
+                <span>AS & A-Level Content</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color as"></div>
+                <span>AS Only</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color alevel"></div>
+                <span>A-Level Only</span>
+            </div>
+        </div>
+
+        <!-- Coverage Progress Bar -->
+        <div class="coverage-bar-container" id="coverageBarContainer">
+            <div class="coverage-bar-header">
+                <span class="coverage-bar-title">📊 Spec Coverage — <span id="coverageYearLabel">Y12</span></span>
+                <span class="coverage-bar-pct"><span id="coveragePct">0</span>% covered</span>
+            </div>
+            <div class="coverage-bar-track">
+                <div class="coverage-bar-fill" id="coverageBarFill" style="width:0%"></div>
+            </div>
+            <div class="coverage-unit-breakdown" id="coverageUnitBreakdown"></div>
+            <div class="autosave-indicator" id="autosaveIndicator">Auto-save: not yet saved</div>
+        </div>
+
+        <div class="main-content">
+            <div class="units-panel">
+                <h2>📋 Curriculum Units</h2>
+
+                <!-- Assessment Section -->
+                <div class="assessment-section">
+                    <h3>📝 Assessments</h3>
+                    <div class="assessment-items">
+                        <div class="assessment-item" data-unit="ASSESS-FORMATIVE" data-level="both" data-type="assessment">
+                            <div class="assessment-item-title">Formative Assessment</div>
+                            <div class="assessment-item-desc">Low-stakes assessment, quiz, class discussion, exit ticket</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-HOMEWORK" data-level="both" data-type="assessment">
+                            <div class="assessment-item-title">Homework Task</div>
+                            <div class="assessment-item-desc">Case study, research, questions, practice exercises</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-UNIT-TEST" data-level="both" data-type="assessment">
+                            <div class="assessment-item-title">End of Unit Test</div>
+                            <div class="assessment-item-desc">Formal assessment covering unit content</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-MOCK" data-level="both" data-type="assessment">
+                            <div class="assessment-item-title">Mock Examination</div>
+                            <div class="assessment-item-desc">Full or partial exam under exam conditions</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-AS-PAPER1" data-level="as" data-type="assessment">
+                            <div class="assessment-item-title">AS Paper 1 Practice</div>
+                            <div class="assessment-item-desc">Unit 3.1 assessment practice (1h 45m)</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-AS-PAPER2" data-level="as" data-type="assessment">
+                            <div class="assessment-item-title">AS Paper 2 Practice</div>
+                            <div class="assessment-item-desc">Unit 3.2 assessment practice (1h 45m)</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-AL-PAPER1" data-level="alevel" data-type="assessment">
+                            <div class="assessment-item-title">A-Level Paper 1 Practice</div>
+                            <div class="assessment-item-desc">Unit 3.1 assessment practice (2h)</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-AL-PAPER2" data-level="alevel" data-type="assessment">
+                            <div class="assessment-item-title">A-Level Paper 2 Practice</div>
+                            <div class="assessment-item-desc">Unit 3.2 assessment practice (2h)</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-AL-PAPER3" data-level="alevel" data-type="assessment">
+                            <div class="assessment-item-title">A-Level Paper 3 Practice</div>
+                            <div class="assessment-item-desc">Unit 3.3 assessment practice (2h)</div>
+                        </div>
+                        <div class="assessment-item" data-unit="ASSESS-FEEDBACK" data-level="both" data-type="assessment">
+                            <div class="assessment-item-title">Assessment Feedback & Reflection</div>
+                            <div class="assessment-item-desc">Review, feedback, improvement time</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-custom-assessment-btn" onclick="toggleCustomAssessmentForm()">
+                        + Add Custom Assessment
+                    </button>
+                    
+                    <div class="custom-assessment-form" id="customAssessmentForm">
+                        <input type="text" id="customAssessmentTitle" placeholder="Assessment title">
+                        <input type="text" id="customAssessmentDesc" placeholder="Assessment description">
+                        <select id="customAssessmentLevel">
+                            <option value="both">AS & A-Level</option>
+                            <option value="as">AS Only</option>
+                            <option value="alevel">A-Level Only</option>
+                        </select>
+                        <button onclick="addCustomAssessment()">Add Assessment</button>
+                    </div>
+                </div>
+                
+                <!-- Unit 3.1 -->
+                <div class="unit-section" data-level="both">
+                    <div class="unit-header" onclick="toggleUnit(this)">
+                        <span>Unit 3.1: What is Business? Managing Marketing and Finance</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="subunits">
+                        <!-- 3.1.1 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.1.1 Business and Objectives</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.1.1.1" data-level="both">
+                                <div class="subunit-title">Entrepreneurs</div>
+                                <div class="subunit-desc">Reasons for setting up, characteristics, challenges, role changes</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.1.2" data-level="both">
+                                <div class="subunit-title">Business Planning and Decisions</div>
+                                <div class="subunit-desc">Business plans, competitiveness, influences, risks & rewards, ethics</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.1.3" data-level="both">
+                                <div class="subunit-title">Business Objectives</div>
+                                <div class="subunit-desc">Purpose, value, SMART objectives</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.1.2 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.1.2 Forms of Business and Stakeholders</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.1.2.1" data-level="both">
+                                <div class="subunit-title">Different Forms of Business</div>
+                                <div class="subunit-desc">Sole traders, Ltd, plc, co-operatives, social enterprises</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.2.2" data-level="both">
+                                <div class="subunit-title">Liability and Shares</div>
+                                <div class="subunit-desc">Limited/unlimited liability, shares, share price, market cap, dividends</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.2.3" data-level="both">
+                                <div class="subunit-title">Stakeholders</div>
+                                <div class="subunit-desc">Internal & external stakeholders, impact of business activity, ethics</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.1.3 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.1.3 Marketing Management</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.1" data-level="both">
+                                <div class="subunit-title">Market Research</div>
+                                <div class="subunit-desc">Primary/secondary, qualitative/quantitative, confidence levels, market mapping</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.2" data-level="both">
+                                <div class="subunit-title">Markets and Marketing Data</div>
+                                <div class="subunit-desc">B2B/B2C/C2C, market size, growth, share, sales data, ROMS</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.3" data-level="both">
+                                <div class="subunit-title">Demand and Elasticity</div>
+                                <div class="subunit-desc">Influences on demand, PED, YED, effect on revenue</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.4" data-level="both">
+                                <div class="subunit-title">Target Market and Segmentation</div>
+                                <div class="subunit-desc">Market segmentation, niche vs mass markets, adapting marketing mix</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.5" data-level="both">
+                                <div class="subunit-title">Marketing Objectives and Planning</div>
+                                <div class="subunit-desc">Marketing objectives, budgets, changes in demand, interrelationships</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.6" data-level="both">
+                                <div class="subunit-title">Product (Marketing Mix)</div>
+                                <div class="subunit-desc">Product lifecycle, extension strategies, Boston Matrix, NPD</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.7" data-level="both">
+                                <div class="subunit-title">Price (Marketing Mix)</div>
+                                <div class="subunit-desc">Influences on price, pricing methods, impact on sales and profit</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.8" data-level="both">
+                                <div class="subunit-title">Place/Distribution (Marketing Mix)</div>
+                                <div class="subunit-desc">Distribution channels, direct vs intermediaries, multi-channel</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.9" data-level="both">
+                                <div class="subunit-title">Promotion (Marketing Mix)</div>
+                                <div class="subunit-desc">Advertising, social media, sales promotions, sponsorship, branding</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.10" data-level="both">
+                                <div class="subunit-title">Digital Technology in Marketing</div>
+                                <div class="subunit-desc">AI, social media, SEO, PPC, cookies, CRM, data analytics</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.11" data-level="alevel">
+                                <div class="subunit-title">International Marketing (A-Level)</div>
+                                <div class="subunit-desc">Purpose, challenges, adapting marketing mix</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.3.12" data-level="alevel">
+                                <div class="subunit-title">Ethical Issues in Marketing (A-Level)</div>
+                                <div class="subunit-desc">Ethics in product, promotional and pricing decisions</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.1.4 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.1.4 Financial Management</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.1" data-level="both">
+                                <div class="subunit-title">Managing Finance</div>
+                                <div class="subunit-desc">Financial objectives, interrelationships, competitiveness</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.2" data-level="both">
+                                <div class="subunit-title">Sources of Finance</div>
+                                <div class="subunit-desc">Internal & external sources, advantages/disadvantages, suitability</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.3" data-level="both">
+                                <div class="subunit-title">Break-even Analysis</div>
+                                <div class="subunit-desc">Fixed/variable costs, contribution, break-even output, margin of safety</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.4" data-level="both">
+                                <div class="subunit-title">Profit</div>
+                                <div class="subunit-desc">Gross/operating/profit for year, profit vs cash, profitability</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.5" data-level="both">
+                                <div class="subunit-title">Budgets</div>
+                                <div class="subunit-desc">Purpose, zero-based budgeting, variance analysis</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.6" data-level="both">
+                                <div class="subunit-title">Cash Flow and Liquidity</div>
+                                <div class="subunit-desc">Payables/receivables, forecasting, improving cash flow, ratios</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.7" data-level="both">
+                                <div class="subunit-title">Financial Reporting</div>
+                                <div class="subunit-desc">Income statement, balance sheet, ratio analysis, limitations</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.8" data-level="both">
+                                <div class="subunit-title">Assessing Financial Performance</div>
+                                <div class="subunit-desc">Profit margins, ROCE, ROI, gearing, shareholder rewards, context</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.1.4.9" data-level="alevel">
+                                <div class="subunit-title">Ethics in Finance (A-Level)</div>
+                                <div class="subunit-desc">Tax avoidance, payment terms</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unit 3.2 -->
+                <div class="unit-section" data-level="both">
+                    <div class="unit-header" onclick="toggleUnit(this)">
+                        <span>Unit 3.2: Managing People and Operations</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="subunits">
+                        <!-- 3.2.1 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.2.1 People Management</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.1" data-level="both">
+                                <div class="subunit-title">HR Objectives and Planning</div>
+                                <div class="subunit-desc">HR objectives, workforce planning, forms of employment, interrelationships</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.2" data-level="both">
+                                <div class="subunit-title">HR Data</div>
+                                <div class="subunit-desc">Engagement, diversity, wellbeing, KPIs, productivity, turnover</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.3" data-level="both">
+                                <div class="subunit-title">Organisational Design</div>
+                                <div class="subunit-desc">Span of control, hierarchy, tall/flat structures, centralisation</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.4" data-level="both">
+                                <div class="subunit-title">Leadership</div>
+                                <div class="subunit-desc">Leadership styles, impact on performance</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.5" data-level="both">
+                                <div class="subunit-title">Developing People</div>
+                                <div class="subunit-desc">Appraisal, talent management, development, retention</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.6" data-level="both">
+                                <div class="subunit-title">Teamwork</div>
+                                <div class="subunit-desc">Purpose, value, Hackman's model</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.7" data-level="both">
+                                <div class="subunit-title">Motivation</div>
+                                <div class="subunit-desc">Benefits/challenges, Taylor, Maslow, Herzberg</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.8" data-level="both">
+                                <div class="subunit-title">Rewarding People</div>
+                                <div class="subunit-desc">Financial rewards, non-financial rewards, advantages/disadvantages</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.9" data-level="both">
+                                <div class="subunit-title">Employee Wellbeing</div>
+                                <div class="subunit-desc">Benefits, methods of improving wellbeing</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.10" data-level="both">
+                                <div class="subunit-title">Employer-Employee Relations</div>
+                                <div class="subunit-desc">Employee voice, trade unions, managing relations</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.1.11" data-level="alevel">
+                                <div class="subunit-title">Ethics in HR (A-Level)</div>
+                                <div class="subunit-desc">Code of conduct, EDI&B, pay gaps</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.2.2 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.2.2 Operations Management</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.1" data-level="both">
+                                <div class="subunit-title">Managing Operations</div>
+                                <div class="subunit-desc">Operations objectives, adding value, location decisions, interrelationships</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.2" data-level="both">
+                                <div class="subunit-title">Operations Data and KPIs</div>
+                                <div class="subunit-desc">Productivity, unit costs, utilisation, KPIs, environmental measures</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.3" data-level="both">
+                                <div class="subunit-title">Efficiency</div>
+                                <div class="subunit-desc">Resource utilisation, lean production, kaizen, improving efficiency</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.4" data-level="both">
+                                <div class="subunit-title">Quality</div>
+                                <div class="subunit-desc">Quality control, QA, TQM, quality circles, benchmarking</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.5" data-level="both">
+                                <div class="subunit-title">Environmental Impact of Operations</div>
+                                <div class="subunit-desc">Sustainable operations, reducing impact, challenges</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.6" data-level="both">
+                                <div class="subunit-title">Matching Output to Demand</div>
+                                <div class="subunit-desc">Managing supply, scheduling, capacity, cyclical/seasonal demand</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.7" data-level="both">
+                                <div class="subunit-title">Supply Chain Management</div>
+                                <div class="subunit-desc">Make vs buy, supplier relationships, logistics, transparency</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.8" data-level="both">
+                                <div class="subunit-title">Inventory Management</div>
+                                <div class="subunit-desc">Reasons to hold stock, JIT vs JIC, inventory turnover</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.9" data-level="both">
+                                <div class="subunit-title">Innovation</div>
+                                <div class="subunit-desc">Purpose, developing innovation, protecting IP</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.10" data-level="both">
+                                <div class="subunit-title">Project Management</div>
+                                <div class="subunit-desc">Network analysis, critical path, float times</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.11" data-level="both">
+                                <div class="subunit-title">Scale of Operations</div>
+                                <div class="subunit-desc">Economies and diseconomies of scale</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.12" data-level="both">
+                                <div class="subunit-title">Technology in Operations</div>
+                                <div class="subunit-desc">AI, automation, inventory/supply chain tech, competitiveness</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.2.2.13" data-level="alevel">
+                                <div class="subunit-title">Ethics in Operations (A-Level)</div>
+                                <div class="subunit-desc">Supplier codes, audits, sourcing, product safety, environmental impact</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.2.3 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)" data-level="alevel">
+                            <span>3.2.3 Managing Business Culture (A-Level)</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.2.3.1" data-level="alevel">
+                                <div class="subunit-title">Business Values and Culture</div>
+                                <div class="subunit-desc">Purpose, factors influencing culture, impact, changing culture</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unit 3.3 -->
+                <div class="unit-section" data-level="alevel">
+                    <div class="unit-header a-level-only" onclick="toggleUnit(this)">
+                        <span>Unit 3.3: Business and Society, External Environment & Strategy (A-Level)</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="subunits">
+                        <!-- 3.3.1 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.3.1 Business and Society</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.3.1.1" data-level="alevel">
+                                <div class="subunit-title">Sustainability</div>
+                                <div class="subunit-desc">Environmental, social, economic sustainability, Triple Bottom Line</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.1.2" data-level="alevel">
+                                <div class="subunit-title">Corporate Social Responsibility (CSR)</div>
+                                <div class="subunit-desc">Carroll's pyramid, shareholder vs stakeholder, greenwashing</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.1.3" data-level="alevel">
+                                <div class="subunit-title">Environmental, Social and Governance (ESG)</div>
+                                <div class="subunit-desc">ESG reporting, performance measures, value of improving ESG</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.3.2 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.3.2 Business and the External Environment</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.3.2.1" data-level="alevel">
+                                <div class="subunit-title">Competitive Environment</div>
+                                <div class="subunit-desc">Porter's Five Forces, influences, impact, responses</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.2.2" data-level="alevel">
+                                <div class="subunit-title">Political/Legal Environment</div>
+                                <div class="subunit-desc">Trade agreements, protectionism, legislation, impact</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.2.3" data-level="alevel">
+                                <div class="subunit-title">Economic Environment</div>
+                                <div class="subunit-desc">GDP, taxation, inflation, interest rates, exchange rates, unemployment</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.2.4" data-level="alevel">
+                                <div class="subunit-title">Social Environment</div>
+                                <div class="subunit-desc">Demographics, consumer values, activism, responses</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.2.5" data-level="alevel">
+                                <div class="subunit-title">Technological Change</div>
+                                <div class="subunit-desc">Digital/disruptive technologies, AI, opportunities/threats</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.3.3 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.3.3 Strategy</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.1" data-level="alevel">
+                                <div class="subunit-title">Strategy and Planning</div>
+                                <div class="subunit-desc">Purpose, performance assessment, quantitative/qualitative analysis</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.2" data-level="alevel">
+                                <div class="subunit-title">Influences on Strategy</div>
+                                <div class="subunit-desc">Mission/vision, SWOT, stakeholder mapping, stakeholder actions</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.3" data-level="alevel">
+                                <div class="subunit-title">Selecting a Strategy</div>
+                                <div class="subunit-desc">Ansoff Matrix, positioning, low-cost vs differentiation</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.4" data-level="alevel">
+                                <div class="subunit-title">Implementation of Strategy</div>
+                                <div class="subunit-desc">Success factors, strategic drift, maintaining competitiveness</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.5" data-level="alevel">
+                                <div class="subunit-title">Strategic Investment Decisions</div>
+                                <div class="subunit-desc">Purpose, influences, payback, ARR, NPV</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.6" data-level="alevel">
+                                <div class="subunit-title">Business Growth</div>
+                                <div class="subunit-desc">SMEs, reasons/challenges, organic/inorganic, mergers, integration, retrenchment</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.7" data-level="alevel">
+                                <div class="subunit-title">Global Strategy</div>
+                                <div class="subunit-desc">Opportunities/threats, entry methods, glocalisation, producing abroad</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.3.8" data-level="alevel">
+                                <div class="subunit-title">Digital Strategy</div>
+                                <div class="subunit-desc">Purpose, impact on functions and competitiveness</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.3.4 -->
+                        <div class="subsection-header" onclick="toggleSubsection(this)">
+                            <span>3.3.4 Change</span>
+                            <span class="subsection-icon">▼</span>
+                        </div>
+                        <div class="topic-items">
+                            <div class="subunit-item" draggable="true" data-unit="3.3.4.1" data-level="alevel">
+                                <div class="subunit-title">Change Management</div>
+                                <div class="subunit-desc">Reasons, advantages/disadvantages, resistance, Lewin's Force Field</div>
+                            </div>
+                            <div class="subunit-item" draggable="true" data-unit="3.3.4.2" data-level="alevel">
+                                <div class="subunit-title">Risk and Uncertainty</div>
+                                <div class="subunit-desc">Types of risk, managing risk/uncertainty, scenario planning, agile business</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="planning-area">
+                <!-- Year Tabs -->
+                <div class="year-tabs">
+                    <button class="year-tab-btn active" onclick="switchYear('Y12')" id="tabY12">📗 Year 12 (Y12)</button>
+                    <button class="year-tab-btn" onclick="switchYear('Y13')" id="tabY13">📘 Year 13 (Y13)</button>
+                </div>
+
+                <!-- Y12 Panel -->
+                <div id="yearPanelY12" class="year-panel active">
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="switchView('week','Y12')" id="weekViewBtnY12">📅 Week-by-Week View</button>
+                        <button class="view-btn" onclick="switchView('overview','Y12')" id="overviewViewBtnY12">📊 Overview Timeline</button>
+                    </div>
+                    <div id="weekViewY12" class="week-view-panel">
+                        <div class="selection-mode-banner" id="selectionBannerY12">
+                            <span id="selectionTextY12">📍 Topic selected! Click on any week to place it.</span>
+                            <button class="cancel-selection-btn" onclick="cancelSelection()">Cancel</button>
+                        </div>
+                        <h2><span>📅 Y12 Teaching Schedule</span></h2>
+                        <div class="teacher-sections">
+                            <div class="teacher-section" id="teacherSectionAY12">
+                                <h3>👨‍🏫 Teacher A</h3>
+                                <div class="week-blocks" id="teacherAY12"></div>
+                            </div>
+                            <div class="teacher-section" id="teacherSectionBY12">
+                                <h3>👩‍🏫 Teacher B</h3>
+                                <div class="week-blocks" id="teacherBY12"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="overviewViewY12" class="overview-panel">
+                        <div class="timeline-view">
+                            <div class="timeline-header"><h2>📊 Y12 Course Overview Timeline</h2></div>
+                            <div class="summary-cards">
+                                <div class="summary-card"><div class="summary-card-header">Course Summary</div><div class="summary-card-content" id="courseSummaryY12">Loading...</div></div>
+                                <div class="summary-card"><div class="summary-card-header">Teacher A Workload</div><div class="summary-card-content" id="teacherASummaryY12">Loading...</div></div>
+                                <div class="summary-card"><div class="summary-card-header">Teacher B Workload</div><div class="summary-card-content" id="teacherBSummaryY12">Loading...</div></div>
+                                <div class="summary-card"><div class="summary-card-header">Progress Status</div><div class="summary-card-content" id="progressSummaryY12">Loading...</div></div>
+                            </div>
+                            <div class="timeline-track">
+                                <div class="teacher-timeline"><div class="teacher-timeline-header">👨‍🏫 Teacher A Timeline</div><div class="timeline-bar" id="timelineAY12"></div><div class="week-markers" id="weekMarkersAY12"></div></div>
+                                <div class="teacher-timeline"><div class="teacher-timeline-header">👩‍🏫 Teacher B Timeline</div><div class="timeline-bar" id="timelineBY12"></div><div class="week-markers" id="weekMarkersBY12"></div></div>
+                            </div>
+                            <div class="summary-cards" style="margin-top:30px;"><div class="summary-card" style="grid-column:1/-1;"><div class="summary-card-header">📋 Topic Distribution</div><div class="summary-card-content" id="topicDistributionY12">Loading...</div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Y13 Panel -->
+                <div id="yearPanelY13" class="year-panel">
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="switchView('week','Y13')" id="weekViewBtnY13">📅 Week-by-Week View</button>
+                        <button class="view-btn" onclick="switchView('overview','Y13')" id="overviewViewBtnY13">📊 Overview Timeline</button>
+                    </div>
+                    <div id="weekViewY13" class="week-view-panel">
+                        <div class="selection-mode-banner" id="selectionBannerY13">
+                            <span id="selectionTextY13">📍 Topic selected! Click on any week to place it.</span>
+                            <button class="cancel-selection-btn" onclick="cancelSelection()">Cancel</button>
+                        </div>
+                        <h2><span>📅 Y13 Teaching Schedule</span></h2>
+                        <div class="teacher-sections">
+                            <div class="teacher-section" id="teacherSectionAY13">
+                                <h3>👨‍🏫 Teacher A</h3>
+                                <div class="week-blocks" id="teacherAY13"></div>
+                            </div>
+                            <div class="teacher-section" id="teacherSectionBY13">
+                                <h3>👩‍🏫 Teacher B</h3>
+                                <div class="week-blocks" id="teacherBY13"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="overviewViewY13" class="overview-panel">
+                        <div class="timeline-view">
+                            <div class="timeline-header"><h2>📊 Y13 Course Overview Timeline</h2></div>
+                            <div class="summary-cards">
+                                <div class="summary-card"><div class="summary-card-header">Course Summary</div><div class="summary-card-content" id="courseSummaryY13">Loading...</div></div>
+                                <div class="summary-card"><div class="summary-card-header">Teacher A Workload</div><div class="summary-card-content" id="teacherASummaryY13">Loading...</div></div>
+                                <div class="summary-card"><div class="summary-card-header">Teacher B Workload</div><div class="summary-card-content" id="teacherBSummaryY13">Loading...</div></div>
+                                <div class="summary-card"><div class="summary-card-header">Progress Status</div><div class="summary-card-content" id="progressSummaryY13">Loading...</div></div>
+                            </div>
+                            <div class="timeline-track">
+                                <div class="teacher-timeline"><div class="teacher-timeline-header">👨‍🏫 Teacher A Timeline</div><div class="timeline-bar" id="timelineAY13"></div><div class="week-markers" id="weekMarkersAY13"></div></div>
+                                <div class="teacher-timeline"><div class="teacher-timeline-header">👩‍🏫 Teacher B Timeline</div><div class="timeline-bar" id="timelineBY13"></div><div class="week-markers" id="weekMarkersBY13"></div></div>
+                            </div>
+                            <div class="summary-cards" style="margin-top:30px;"><div class="summary-card" style="grid-column:1/-1;"><div class="summary-card-header">📋 Topic Distribution</div><div class="summary-card-content" id="topicDistributionY13">Loading...</div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="totalWeeks">0</div>
+                <div class="stat-label">Total Weeks</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="totalLessons">0</div>
+                <div class="stat-label">Total Lessons</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="plannedUnits">0</div>
+                <div class="stat-label">Units Planned</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="unplannedUnits">0</div>
+                <div class="stat-label">Units Remaining</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- School Calendar Modal -->
+    <div id="calendarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📅 School Calendar</h2>
+                <button class="close-modal" onclick="closeCalendarModal()">×</button>
+            </div>
+
+            <div class="quick-actions">
+                <button class="quick-action-btn" onclick="addUKHolidays()">Add UK School Holidays</button>
+                <button class="quick-action-btn" onclick="addAssessmentWeeks()">Add Assessment Weeks</button>
+                <button class="quick-action-btn" onclick="clearCalendar()">Clear Calendar</button>
+            </div>
+
+            <table class="calendar-table" id="calendarTable">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Start Date</th>
+                        <th>Event Type</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="calendarTableBody">
+                </tbody>
+            </table>
+
+            <div class="event-row" style="margin-top: 20px; border-top: 2px solid #e9ecef; padding-top: 20px;">
+                <select id="newEventWeek">
+                    <option value="">Week</option>
+                </select>
+                <select id="newEventType">
+                    <option value="holiday">Holiday</option>
+                    <option value="assessment">Assessment</option>
+                    <option value="inset">INSET Day</option>
+                    <option value="event">School Event</option>
+                </select>
+                <input type="text" id="newEventDesc" placeholder="Event description" style="width: 100%;">
+                <button class="add-event-btn" onclick="addCalendarEvent()">Add Event</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scheme Notes Modal -->
+    <div id="notesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Scheme of Work Notes</h2>
+                <button class="close-modal" onclick="closeNotesModal()">×</button>
+            </div>
+
+            <div class="notes-section">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">
+                    General Notes & Considerations:
+                </label>
+                <textarea id="schemeNotes" placeholder="Add notes about your scheme of work...&#10;&#10;Examples:&#10;- Key resources being used&#10;- Cross-curricular links&#10;- Differentiation strategies&#10;- Assessment approaches&#10;- Equipment/room bookings needed"></textarea>
+            </div>
+
+            <div class="notes-section" style="background: #e8f5e9; border-left-color: #28a745;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">
+                    Success Criteria & Target Outcomes:
+                </label>
+                <textarea id="successCriteria" placeholder="Define what successful learning looks like...&#10;&#10;Examples:&#10;- Students can confidently apply break-even analysis&#10;- 80% of students achieve target grades in mock exams&#10;- Students demonstrate understanding of ethical business decisions"></textarea>
+            </div>
+
+            <div class="notes-section" style="background: #fff3e0; border-left-color: #ff9800;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">
+                    Risks & Mitigation Strategies:
+                </label>
+                <textarea id="risksMitigation" placeholder="Identify potential challenges...&#10;&#10;Examples:&#10;- Time pressure in Term 3 - build in buffer weeks&#10;- Complex financial calculations - extra support sessions&#10;- Student absences - provide catch-up materials"></textarea>
+            </div>
+
+            <button onclick="saveNotes()" style="width: 100%; margin-top: 15px; padding: 12px;">
+                Save Notes
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        let selectedTopic = null;
+        let selectionMode = false;
+        let schoolCalendar = [];
+        let schemeNotes = { general: '', success: '', risks: '' };
+        let teacherConfig = { A: { enabled: true, lessons: 3 }, B: { enabled: true, lessons: 3 } };
+        let activeYear = 'Y12';
+        let draggedItem = null;
+
+        // ─── UNDO STACK ─────────────────────────────────────────────
+        const undoStack = [];
+        const MAX_UNDO = 30;
+
+        function pushUndo(description, restoreFn) {
+            undoStack.push({ description, restoreFn });
+            if (undoStack.length > MAX_UNDO) undoStack.shift();
+            document.getElementById('undoBtn').disabled = false;
+        }
+
+        function undoLastAction() {
+            if (!undoStack.length) return;
+            const action = undoStack.pop();
+            action.restoreFn();
+            if (!undoStack.length) document.getElementById('undoBtn').disabled = true;
+            showToast('↩ Undone: ' + action.description, 'info');
+            updateStats();
+            updateCoverageBar();
+            saveScheduleToLocalStorage();
+        }
+
+        // ─── TOAST NOTIFICATIONS ────────────────────────────────────
+        function showToast(message, type = 'success', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            container.appendChild(toast);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => toast.classList.add('show'));
+            });
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 350);
+            }, duration);
+        }
+
+        // ─── AUTOSAVE TO LOCALSTORAGE ────────────────────────────────
+        let autosaveTimer = null;
+        function scheduleAutosave() {
+            clearTimeout(autosaveTimer);
+            const indicator = document.getElementById('autosaveIndicator');
+            if (indicator) { indicator.className = 'autosave-indicator saving'; indicator.textContent = 'Auto-saving...'; }
+            autosaveTimer = setTimeout(() => {
+                saveScheduleToLocalStorage();
+                const now = new Date();
+                const t = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                if (indicator) { indicator.className = 'autosave-indicator saved'; indicator.textContent = `Auto-saved at ${t}`; }
+            }, 1200);
+        }
+
+        function saveScheduleToLocalStorage() {
+            try {
+                const data = exportDataEnhanced();
+                localStorage.setItem('aqa_sow_schedule', JSON.stringify(data));
+            } catch(e) { console.warn('Autosave failed:', e); }
+        }
+
+        function loadScheduleFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('aqa_sow_schedule');
+                if (!saved) return false;
+                const data = JSON.parse(saved);
+                // Restore school info
+                if (data.schoolInfo) {
+                    ['name','department','academicYear','startDate','teacherA','teacherB'].forEach((k, i) => {
+                        const ids = ['schoolName','department','academicYear','courseStartDate','teacherAName','teacherBName'];
+                        if (data.schoolInfo[k]) document.getElementById(ids[i]).value = data.schoolInfo[k];
+                    });
+                }
+                const settings = data.settings || {};
+                if (settings.weeks) document.getElementById('weeksInput').value = settings.weeks;
+                if (settings.lessonsPerWeek) document.getElementById('lessonsPerWeek').value = settings.lessonsPerWeek;
+                if (settings.qualLevel) document.getElementById('qualLevel').value = settings.qualLevel;
+                if (data.teacherConfig) {
+                    teacherConfig = data.teacherConfig;
+                    document.getElementById('teacherALessons').value = teacherConfig.A.lessons;
+                    document.getElementById('teacherBLessons').value = teacherConfig.B.lessons;
+                    const toggleA = document.getElementById('teacherAToggle');
+                    const toggleB = document.getElementById('teacherBToggle');
+                    if (toggleA) toggleA.classList.toggle('active', teacherConfig.A.enabled);
+                    if (toggleB) toggleB.classList.toggle('active', teacherConfig.B.enabled);
+                }
+                if (data.calendar) schoolCalendar = data.calendar;
+                if (data.notes) schemeNotes = data.notes;
+                if (data.customAssessments) {
+                    const container = document.querySelector('.assessment-items');
+                    data.customAssessments.forEach(assessment => {
+                        if (document.querySelector(`.assessment-item[data-unit="${assessment.id}"]`)) return;
+                        const assessmentItem = document.createElement('div');
+                        assessmentItem.className = 'assessment-item';
+                        assessmentItem.dataset.unit = assessment.id;
+                        assessmentItem.dataset.level = assessment.level;
+                        assessmentItem.dataset.type = 'assessment';
+                        assessmentItem.innerHTML = `<div class="assessment-item-title">${assessment.title}</div><div class="assessment-item-desc">${assessment.desc}</div>`;
+                        container.appendChild(assessmentItem);
+                        assessmentItem.addEventListener('click', function() {
+                            document.querySelectorAll('.subunit-item, .assessment-item').forEach(el => el.classList.remove('selected'));
+                            this.classList.add('selected'); selectedTopic = this; enableSelectionMode();
+                        });
+                    });
+                }
+                generateWeeks();
+                filterUnits();
+                updateTeacherLabels();
+                if (data.schedule && data.schedule.length > 0) {
+                    data.schedule.forEach(weekData => {
+                        const yearAttr = weekData.year || 'Y12';
+                        const zone = document.querySelector(`.week-content[data-week="${weekData.week}"][data-teacher="${weekData.teacher}"][data-year="${yearAttr}"]`);
+                        if (zone) {
+                            weekData.items.forEach(itemData => {
+                                const sourceItem = document.querySelector(`.subunit-item[data-unit="${itemData.unit}"], .assessment-item[data-unit="${itemData.unit}"]`);
+                                if (sourceItem) zone.appendChild(createPlannedItem(sourceItem));
+                                else {
+                                    const ghost = document.createElement('div');
+                                    ghost.className = 'planned-item' + (itemData.isAssessment ? ' assessment-type' : '');
+                                    ghost.draggable = true;
+                                    ghost.dataset.unit = itemData.unit;
+                                    ghost.innerHTML = `<div class="planned-item-content"><div class="planned-item-title">${itemData.title}</div><div class="planned-item-desc">${itemData.desc}</div></div><button class="remove-btn" onclick="removeItem(event,this)">×</button>`;
+                                    setupPlannedItemDrag(ghost);
+                                    zone.appendChild(ghost);
+                                }
+                            });
+                        }
+                    });
+                    setupWeekContentDragDrop();
+                    updateWeekBlockHighlights();
+                }
+                return data.schedule && data.schedule.length > 0;
+            } catch(e) { console.warn('Load from localStorage failed:', e); return false; }
+        }
+
+        // ─── COVERAGE BAR ────────────────────────────────────────────
+        const UNIT_LABELS = {
+            '3.1': 'Marketing & Finance',
+            '3.2': 'People & Operations',
+            '3.3': 'Society & Strategy'
+        };
+        const UNIT_TOPIC_COUNTS = { '3.1': null, '3.2': null, '3.3': null }; // computed dynamically
+
+        function updateCoverageBar() {
+            const year = activeYear;
+            document.getElementById('coverageYearLabel').textContent = year;
+
+            const allSubunits = document.querySelectorAll('.subunit-item');
+            const visibleSubunits = Array.from(allSubunits).filter(item => window.getComputedStyle(item).display !== 'none');
+            const plannedItems = document.querySelectorAll(`.week-content[data-year="${year}"] .planned-item:not(.assessment-type)`);
+            const uniquePlanned = new Set();
+            plannedItems.forEach(item => uniquePlanned.add(item.dataset.unit));
+
+            const pct = visibleSubunits.length > 0 ? Math.round((uniquePlanned.size / visibleSubunits.length) * 100) : 0;
+            document.getElementById('coveragePct').textContent = pct;
+            const fill = document.getElementById('coverageBarFill');
+            fill.style.width = pct + '%';
+            fill.className = 'coverage-bar-fill' + (pct >= 80 ? ' ok' : pct >= 40 ? '' : ' warn');
+
+            // Per-unit breakdown
+            const unitTotals = {}, unitPlanned = {};
+            visibleSubunits.forEach(item => {
+                const mainUnit = item.dataset.unit.split('.').slice(0, 2).join('.');
+                unitTotals[mainUnit] = (unitTotals[mainUnit] || 0) + 1;
+            });
+            uniquePlanned.forEach(unit => {
+                if (unit.startsWith('ASSESS')) return;
+                const mainUnit = unit.split('.').slice(0, 2).join('.');
+                unitPlanned[mainUnit] = (unitPlanned[mainUnit] || 0) + 1;
+            });
+            const breakdown = document.getElementById('coverageUnitBreakdown');
+            breakdown.innerHTML = '';
+            Object.keys(unitTotals).sort().forEach(unit => {
+                const total = unitTotals[unit] || 0;
+                const planned = unitPlanned[unit] || 0;
+                const upct = total > 0 ? Math.round((planned / total) * 100) : 0;
+                breakdown.innerHTML += `
+                    <div class="coverage-unit-item">
+                        <div class="unit-label">${UNIT_LABELS[unit] || unit}</div>
+                        <div class="unit-mini-bar"><div class="unit-mini-fill" style="width:${upct}%"></div></div>
+                        <div class="unit-count">${planned}/${total} topics (${upct}%)</div>
+                    </div>`;
+            });
+        }
+
+        // ─── OVERLOAD DETECTION ───────────────────────────────────────
+        function checkWeekOverload() {
+            document.querySelectorAll('.week-block').forEach(block => {
+                const teacher = block.dataset.teacher;
+                const lessonsAvail = teacherConfig[teacher] ? teacherConfig[teacher].lessons : 3;
+                const itemCount = block.querySelectorAll('.planned-item').length;
+                const wasOverloaded = block.classList.contains('overloaded');
+                const isOverloaded = itemCount > lessonsAvail;
+                block.classList.toggle('overloaded', isOverloaded);
+                // Remove old overload warning
+                const existing = block.querySelector('.overload-warning');
+                if (existing) existing.remove();
+                if (isOverloaded) {
+                    const warn = document.createElement('div');
+                    warn.className = 'overload-warning';
+                    warn.textContent = `⚠ ${itemCount} topics, ${lessonsAvail} lessons available`;
+                    block.appendChild(warn);
+                }
+            });
+        }
+
+        // ─── KEYBOARD SHORTCUT ────────────────────────────────────────
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                undoLastAction();
+            }
+            if (e.key === 'Escape') {
+                cancelSelection();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTeacherConfig();
+            loadSchoolInfo();
+            const hadSavedData = loadScheduleFromLocalStorage();
+            if (!hadSavedData) {
+                generateWeeks();
+            }
+            setupClickSelection();
+            applyTeacherVisibility();
+            updateWeekBlockHighlights();
+            setupWeekContentDragDrop();
+            updateStats();
+            updateCoverageBar();
+            if (hadSavedData) showToast('📂 Previous scheme restored', 'info');
+        });
+
+        // ─── YEAR TABS ──────────────────────────────────────────────
+        function switchYear(year) {
+            activeYear = year;
+            ['Y12','Y13'].forEach(y => {
+                document.getElementById('yearPanel' + y).classList.toggle('active', y === year);
+                document.getElementById('tab' + y).classList.toggle('active', y === year);
+            });
+            updateStats();
+            updateCoverageBar();
+        }
+
+        // ─── GENERATE WEEKS ─────────────────────────────────────────
+        function generateWeeks() {
+            const weeks = parseInt(document.getElementById('weeksInput').value);
+            ['Y12','Y13'].forEach(year => {
+                ['A','B'].forEach(teacher => {
+                    const container = document.getElementById('teacher' + teacher + year);
+                    if (container) {
+                        container.innerHTML = '';
+                        for (let i = 1; i <= weeks; i++) {
+                            container.appendChild(createWeekBlock(i, teacher, year));
+                        }
+                    }
+                });
+            });
+            setupWeekClickHandlers();
+            applyTeacherVisibility();
+            updateStats();
+        }
+
+        function createWeekBlock(weekNum, teacher, year) {
+            const lessonsPerWeek = teacherConfig[teacher].lessons;
+            const block = document.createElement('div');
+            block.className = 'week-block';
+            block.dataset.week = weekNum;
+            block.dataset.teacher = teacher;
+            block.dataset.year = year;
+            block.innerHTML = `
+                <div class="week-header">
+                    <span class="week-number">Week ${weekNum}</span>
+                    <span class="lessons-count">${lessonsPerWeek} lessons</span>
+                </div>
+                <div class="week-content" data-week="${weekNum}" data-teacher="${teacher}" data-year="${year}"></div>
+            `;
+            return block;
+        }
+
+        // ─── CLICK SELECTION ────────────────────────────────────────
+        function setupClickSelection() {
+            const subunits = document.querySelectorAll('.subunit-item, .assessment-item');
+            subunits.forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.subunit-item, .assessment-item').forEach(el => el.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTopic = this;
+                    enableSelectionMode();
+                });
+            });
+        }
+
+        function enableSelectionMode() {
+            selectionMode = true;
+            const titleElement = selectedTopic.querySelector('.subunit-title, .assessment-item-title');
+            const topicTitle = titleElement ? titleElement.textContent : 'Selected item';
+
+            ['Y12','Y13'].forEach(year => {
+                const banner = document.getElementById('selectionBanner' + year);
+                const text = document.getElementById('selectionText' + year);
+                if (banner) banner.classList.add('active');
+                if (text) text.textContent = `📍 "${topicTitle}" selected! Click on any week to place it.`;
+            });
+
+            document.querySelectorAll('.week-block').forEach(block => block.classList.add('selectable'));
+        }
+
+        function cancelSelection() {
+            selectionMode = false;
+            selectedTopic = null;
+            ['Y12','Y13'].forEach(year => {
+                const banner = document.getElementById('selectionBanner' + year);
+                if (banner) banner.classList.remove('active');
+            });
+            document.querySelectorAll('.subunit-item, .assessment-item').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.week-block').forEach(block => block.classList.remove('selectable'));
+        }
+
+        function setupWeekClickHandlers() {
+            document.querySelectorAll('.week-block').forEach(block => {
+                block.addEventListener('click', function(e) {
+                    if (selectionMode && selectedTopic && !e.target.classList.contains('remove-btn')) {
+                        // Only place in the currently active year
+                        if (this.dataset.year !== activeYear) return;
+                        const weekContent = this.querySelector('.week-content');
+                        const newItem = createPlannedItem(selectedTopic);
+                        weekContent.appendChild(newItem);
+                        const title = newItem.querySelector('.planned-item-title') ? newItem.querySelector('.planned-item-title').textContent : 'topic';
+                        pushUndo(`Place "${title}" in Week ${this.dataset.week}`, () => newItem.remove());
+                        cancelSelection();
+                        updateStats();
+                    }
+                });
+            });
+        }
+
+        // ─── PLANNED ITEMS ──────────────────────────────────────────
+        function createPlannedItem(sourceItem) {
+            const item = document.createElement('div');
+            item.className = 'planned-item';
+            item.draggable = true;
+            item.dataset.unit = sourceItem.dataset.unit;
+
+            const isAssessment = sourceItem.dataset.type === 'assessment';
+            if (isAssessment) item.classList.add('assessment-type');
+
+            const titleElement = sourceItem.querySelector('.subunit-title, .assessment-item-title');
+            const descElement = sourceItem.querySelector('.subunit-desc, .assessment-item-desc');
+            const title = titleElement ? titleElement.textContent : 'Unknown';
+            const desc = descElement ? descElement.textContent : '';
+
+            item.innerHTML = `
+                <div class="planned-item-content">
+                    <div class="planned-item-title">${title}</div>
+                    <div class="planned-item-desc">${desc}</div>
+                </div>
+                <button class="remove-btn" onclick="removeItem(event, this)">×</button>
+            `;
+
+            setupPlannedItemDrag(item);
+            return item;
+        }
+
+        function removeItem(event, btn) {
+            event.stopPropagation();
+            const item = btn.parentElement;
+            const parent = item.parentElement;
+            const nextSibling = item.nextSibling;
+            const title = item.querySelector('.planned-item-title') ? item.querySelector('.planned-item-title').textContent : 'item';
+            pushUndo(`Remove "${title}"`, () => {
+                if (nextSibling && nextSibling.parentElement === parent) parent.insertBefore(item, nextSibling);
+                else parent.appendChild(item);
+            });
+            item.remove();
+            updateStats();
+        }
+
+        // ─── DRAG-TO-REORDER PLANNED ITEMS ──────────────────────────
+        function setupPlannedItemDrag(item) {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                this.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', ''); // required for Firefox
+                e.stopPropagation(); // prevent week-block click
+            });
+
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+                document.querySelectorAll('.planned-item').forEach(el => {
+                    el.classList.remove('drag-target-above', 'drag-target-below');
+                });
+                document.querySelectorAll('.week-content').forEach(el => el.classList.remove('drag-over-empty'));
+                draggedItem = null;
+            });
+
+            item.addEventListener('dragover', function(e) {
+                if (!draggedItem || draggedItem === this) return;
+                e.preventDefault();
+                e.stopPropagation();
+                document.querySelectorAll('.planned-item').forEach(el => el.classList.remove('drag-target-above','drag-target-below'));
+                const rect = this.getBoundingClientRect();
+                const midpoint = rect.top + rect.height / 2;
+                if (e.clientY < midpoint) {
+                    this.classList.add('drag-target-above');
+                } else {
+                    this.classList.add('drag-target-below');
+                }
+            });
+
+            item.addEventListener('drop', function(e) {
+                if (!draggedItem || draggedItem === this) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const rect = this.getBoundingClientRect();
+                const midpoint = rect.top + rect.height / 2;
+                if (e.clientY < midpoint) {
+                    this.parentNode.insertBefore(draggedItem, this);
+                } else {
+                    this.parentNode.insertBefore(draggedItem, this.nextSibling);
+                }
+                updateStats();
+            });
+        }
+
+        // Setup drag-over on week-content zones to allow drop into empty zones
+        function setupWeekContentDragDrop() {
+            document.querySelectorAll('.week-content').forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    if (!draggedItem) return;
+                    e.preventDefault();
+                    this.classList.add('drag-over-empty');
+                });
+                zone.addEventListener('dragleave', function(e) {
+                    if (!e.relatedTarget || !this.contains(e.relatedTarget)) {
+                        this.classList.remove('drag-over-empty');
+                    }
+                });
+                zone.addEventListener('drop', function(e) {
+                    if (!draggedItem) return;
+                    e.preventDefault();
+                    this.classList.remove('drag-over-empty');
+                    // Only drop if target is the zone itself (not an item inside it)
+                    if (e.target === this || e.target.classList.contains('week-content')) {
+                        this.appendChild(draggedItem);
+                        updateStats();
+                    }
+                });
+            });
+        }
+
+        // ─── VIEW SWITCHING ─────────────────────────────────────────
+        function switchView(view, year) {
+            if (!year) year = activeYear;
+            const weekView = document.getElementById('weekView' + year);
+            const overviewView = document.getElementById('overviewView' + year);
+            const weekBtn = document.getElementById('weekViewBtn' + year);
+            const overviewBtn = document.getElementById('overviewViewBtn' + year);
+
+            if (view === 'week') {
+                if (weekView) weekView.style.display = 'block';
+                if (overviewView) overviewView.classList.remove('active');
+                if (weekBtn) weekBtn.classList.add('active');
+                if (overviewBtn) overviewBtn.classList.remove('active');
+            } else {
+                if (weekView) weekView.style.display = 'none';
+                if (overviewView) overviewView.classList.add('active');
+                if (weekBtn) weekBtn.classList.remove('active');
+                if (overviewBtn) overviewBtn.classList.add('active');
+                updateOverviewTimeline(year);
+            }
+        }
+
+        function updateOverviewTimeline(year) {
+            if (!year) year = activeYear;
+            const weeks = parseInt(document.getElementById('weeksInput').value);
+            const lessonsPerWeek = parseInt(document.getElementById('lessonsPerWeek').value);
+            updateTeacherTimeline('A', weeks, year);
+            updateTeacherTimeline('B', weeks, year);
+            updateSummaryCards(weeks, lessonsPerWeek, year);
+        }
+
+        function updateTeacherTimeline(teacher, totalWeeks, year) {
+            const timeline = document.getElementById('timeline' + teacher + year);
+            const weekMarkers = document.getElementById('weekMarkers' + teacher + year);
+            if (!timeline) return;
+            timeline.innerHTML = '';
+            weekMarkers.innerHTML = '';
+
+            for (let week = 1; week <= totalWeeks; week++) {
+                const weekContent = document.querySelector(
+                    `.week-content[data-week="${week}"][data-teacher="${teacher}"][data-year="${year}"]`
+                );
+                const items = weekContent ? weekContent.querySelectorAll('.planned-item') : [];
+                items.forEach(item => {
+                    const segment = document.createElement('div');
+                    segment.className = 'timeline-segment';
+                    segment.innerHTML = `
+                        <span class="timeline-segment-tooltip">Week ${week}: ${item.querySelector('.planned-item-title').textContent}</span>
+                        ${week}
+                    `;
+                    timeline.appendChild(segment);
+                });
+            }
+
+            const markerInterval = Math.ceil(totalWeeks / 10);
+            for (let i = 1; i <= totalWeeks; i += markerInterval) {
+                const marker = document.createElement('div');
+                marker.textContent = `Week ${i}`;
+                weekMarkers.appendChild(marker);
+            }
+            const lastMarker = document.createElement('div');
+            lastMarker.textContent = `Week ${totalWeeks}`;
+            weekMarkers.appendChild(lastMarker);
+        }
+
+        function updateSummaryCards(totalWeeks, lessonsPerWeek, year) {
+            if (!year) year = activeYear;
+            const courseSummary = document.getElementById('courseSummary' + year);
+            if (courseSummary) courseSummary.innerHTML = `
+                <strong>${totalWeeks}</strong> weeks of teaching<br>
+                <strong>${lessonsPerWeek}</strong> lessons per week<br>
+                <strong>${totalWeeks * lessonsPerWeek}</strong> total lessons
+            `;
+
+            const teacherAItems = document.querySelectorAll(`.week-content[data-teacher="A"][data-year="${year}"] .planned-item`);
+            const teacherBItems = document.querySelectorAll(`.week-content[data-teacher="B"][data-year="${year}"] .planned-item`);
+            const teacherAUnits = new Set(), teacherBUnits = new Set();
+            teacherAItems.forEach(item => teacherAUnits.add(item.dataset.unit));
+            teacherBItems.forEach(item => teacherBUnits.add(item.dataset.unit));
+
+            const tAS = document.getElementById('teacherASummary' + year);
+            const tBS = document.getElementById('teacherBSummary' + year);
+            if (tAS) tAS.innerHTML = `<strong>${teacherAUnits.size}</strong> unique topics<br><strong>${teacherAItems.length}</strong> teaching blocks`;
+            if (tBS) tBS.innerHTML = `<strong>${teacherBUnits.size}</strong> unique topics<br><strong>${teacherBItems.length}</strong> teaching blocks`;
+
+            const allSubunits = document.querySelectorAll('.subunit-item, .assessment-item');
+            const visibleSubunits = Array.from(allSubunits).filter(item => window.getComputedStyle(item).display !== 'none');
+            const allPlannedItems = document.querySelectorAll(`.week-content[data-year="${year}"] .planned-item`);
+            const uniquePlanned = new Set();
+            allPlannedItems.forEach(item => uniquePlanned.add(item.dataset.unit));
+            const percentComplete = visibleSubunits.length > 0 ? Math.round((uniquePlanned.size / visibleSubunits.length) * 100) : 0;
+
+            const pS = document.getElementById('progressSummary' + year);
+            if (pS) pS.innerHTML = `<strong>${percentComplete}%</strong> complete<br><strong>${uniquePlanned.size}</strong> of <strong>${visibleSubunits.length}</strong> topics planned`;
+
+            updateTopicDistribution(year);
+        }
+
+        function updateTopicDistribution(year) {
+            if (!year) year = activeYear;
+            const distribution = {};
+            document.querySelectorAll(`.week-content[data-year="${year}"] .planned-item`).forEach(item => {
+                const mainUnit = item.dataset.unit.split('.').slice(0, 2).join('.');
+                distribution[mainUnit] = (distribution[mainUnit] || 0) + 1;
+            });
+            const unitNames = {
+                '3.1': 'Unit 3.1: Marketing & Finance',
+                '3.2': 'Unit 3.2: People & Operations',
+                '3.3': 'Unit 3.3: Society, Environment & Strategy'
+            };
+            let html = '<div style="display: grid; gap: 10px;">';
+            for (const [unit, count] of Object.entries(distribution).sort()) {
+                html += `<div style="display:flex;justify-content:space-between;align-items:center;"><span>${unitNames[unit] || unit}</span><strong style="color:#9b4dca;">${count} topics</strong></div>`;
+            }
+            html += '</div>';
+            const el = document.getElementById('topicDistribution' + year);
+            if (el) el.innerHTML = html || 'No topics planned yet';
+        }
+
+        // ─── FILTER UNITS ───────────────────────────────────────────
+        function filterUnits() {
+            const level = document.getElementById('qualLevel').value;
+            document.querySelectorAll('.unit-section').forEach(unit => {
+                const unitLevel = unit.dataset.level;
+                unit.style.display = (level === 'both' || unitLevel === 'both' || level === unitLevel) ? 'block' : 'none';
+            });
+            document.querySelectorAll('.subunit-item').forEach(item => {
+                const itemLevel = item.dataset.level;
+                const parentSection = item.closest('.unit-section');
+                const parentVisible = parentSection && parentSection.style.display !== 'none';
+                item.style.display = (parentVisible && (level === 'both' || itemLevel === 'both' || level === itemLevel)) ? 'block' : 'none';
+            });
+            document.querySelectorAll('.assessment-item').forEach(assessment => {
+                const assessLevel = assessment.dataset.level;
+                assessment.style.display = (level === 'both' || assessLevel === 'both' || level === assessLevel) ? 'block' : 'none';
+            });
+            updateStats();
+        }
+
+        // ─── STATS ──────────────────────────────────────────────────
+        function updateStats() {
+            const weeks = parseInt(document.getElementById('weeksInput').value);
+            const lessonsPerWeek = parseInt(document.getElementById('lessonsPerWeek').value);
+            const totalLessons = weeks * lessonsPerWeek;
+
+            const allSubunits = document.querySelectorAll('.subunit-item, .assessment-item');
+            const visibleSubunits = Array.from(allSubunits).filter(item => window.getComputedStyle(item).display !== 'none');
+
+            const plannedItems = document.querySelectorAll(`.week-content[data-year="${activeYear}"] .planned-item`);
+            const uniquePlanned = new Set();
+            plannedItems.forEach(item => uniquePlanned.add(item.dataset.unit));
+
+            document.getElementById('totalWeeks').textContent = weeks;
+            document.getElementById('totalLessons').textContent = totalLessons;
+            document.getElementById('plannedUnits').textContent = uniquePlanned.size;
+            document.getElementById('unplannedUnits').textContent = visibleSubunits.length - uniquePlanned.size;
+
+            updateCoverageBar();
+            checkWeekOverload();
+            scheduleAutosave();
+        }
+
+        function clearAll() {
+            if (confirm(`Are you sure you want to clear the ${activeYear} schedule?`)) {
+                const zones = document.querySelectorAll(`.week-content[data-year="${activeYear}"]`);
+                // Save snapshot for undo
+                const snapshots = [];
+                zones.forEach(zone => {
+                    snapshots.push({ zone, html: zone.innerHTML });
+                    zone.innerHTML = '';
+                });
+                pushUndo(`Clear ${activeYear} schedule`, () => {
+                    snapshots.forEach(snap => {
+                        snap.zone.innerHTML = snap.html;
+                        snap.zone.querySelectorAll('.planned-item').forEach(item => {
+                            item.draggable = true;
+                            setupPlannedItemDrag(item);
+                        });
+                    });
+                    setupWeekContentDragDrop();
+                });
+                cancelSelection();
+                updateStats();
+                showToast(`🗑 ${activeYear} schedule cleared`, 'warning');
+            }
+        }
+
+        // ─── TEACHER CONFIG ─────────────────────────────────────────
+        function loadTeacherConfig() {
+            const savedConfig = localStorage.getItem('teacherConfig');
+            if (savedConfig) {
+                teacherConfig = JSON.parse(savedConfig);
+                document.getElementById('teacherALessons').value = teacherConfig.A.lessons;
+                document.getElementById('teacherBLessons').value = teacherConfig.B.lessons;
+                const toggleA = document.getElementById('teacherAToggle');
+                const toggleB = document.getElementById('teacherBToggle');
+                if (!teacherConfig.A.enabled) toggleA.classList.remove('active');
+                if (!teacherConfig.B.enabled) toggleB.classList.remove('active');
+                applyTeacherVisibility();
+            }
+        }
+
+        function toggleTeacherConfig() {
+            const panel = document.getElementById('teacherConfigPanel');
+            const btn = document.getElementById('toggleTeacherConfigBtn');
+            if (panel.style.display === 'none') { panel.style.display = 'block'; btn.textContent = '▲ Collapse'; }
+            else { panel.style.display = 'none'; btn.textContent = '▼ Expand'; }
+        }
+
+        function toggleTeacher(teacher) {
+            const toggle = document.getElementById('teacher' + teacher + 'Toggle');
+            const isActive = toggle.classList.contains('active');
+            if (isActive) { toggle.classList.remove('active'); teacherConfig[teacher].enabled = false; }
+            else { toggle.classList.add('active'); teacherConfig[teacher].enabled = true; }
+            localStorage.setItem('teacherConfig', JSON.stringify(teacherConfig));
+            applyTeacherVisibility();
+        }
+
+        function updateTeacherLessons() {
+            teacherConfig.A.lessons = parseInt(document.getElementById('teacherALessons').value) || 0;
+            teacherConfig.B.lessons = parseInt(document.getElementById('teacherBLessons').value) || 0;
+            localStorage.setItem('teacherConfig', JSON.stringify(teacherConfig));
+            // Update all week block headers
+            document.querySelectorAll('.week-block').forEach(block => {
+                const teacher = block.dataset.teacher;
+                const countEl = block.querySelector('.lessons-count');
+                if (countEl) countEl.textContent = teacherConfig[teacher].lessons + ' lessons';
+            });
+        }
+
+        function applyTeacherVisibility() {
+            ['Y12','Y13'].forEach(year => {
+                const sectionA = document.getElementById('teacherSectionA' + year);
+                const sectionB = document.getElementById('teacherSectionB' + year);
+                if (sectionA) sectionA.classList.toggle('hidden', !teacherConfig.A.enabled);
+                if (sectionB) sectionB.classList.toggle('hidden', !teacherConfig.B.enabled);
+            });
+        }
+
+        function updateTeacherLabels() {
+            const nameA = document.getElementById('teacherAName').value || 'Teacher A';
+            const nameB = document.getElementById('teacherBName').value || 'Teacher B';
+            document.querySelectorAll('[id^="teacherSectionA"] h3').forEach(el => el.textContent = '👨‍🏫 ' + nameA);
+            document.querySelectorAll('[id^="teacherSectionB"] h3').forEach(el => el.textContent = '👩‍🏫 ' + nameB);
+        }
+
+        // ─── SCHOOL INFO ─────────────────────────────────────────────
+        function toggleSchoolInfo() {
+            const grid = document.getElementById('schoolInfoGrid');
+            const btn = document.getElementById('toggleSchoolInfoBtn');
+            if (grid.style.display === 'none') { grid.style.display = 'grid'; btn.textContent = '▲ Collapse'; }
+            else { grid.style.display = 'none'; btn.textContent = '▼ Expand'; }
+        }
+
+        function loadSchoolInfo() {
+            const fields = ['schoolName','department','academicYear','courseStartDate','teacherAName','teacherBName'];
+            fields.forEach(id => {
+                const saved = localStorage.getItem(id);
+                if (saved) document.getElementById(id).value = saved;
+                document.getElementById(id).addEventListener('change', function() {
+                    localStorage.setItem(id, this.value);
+                    if (id === 'teacherAName' || id === 'teacherBName') updateTeacherLabels();
+                });
+            });
+        }
+
+        // ─── CALENDAR ───────────────────────────────────────────────
+        function openCalendarModal() {
+            const modal = document.getElementById('calendarModal');
+            modal.classList.add('active');
+            renderCalendar();
+            const dropdown = document.getElementById('newEventWeek');
+            dropdown.innerHTML = '<option value="">Week</option>';
+            const weeks = parseInt(document.getElementById('weeksInput').value);
+            for (let i = 1; i <= weeks; i++) {
+                const option = document.createElement('option');
+                option.value = i; option.textContent = 'Week ' + i;
+                dropdown.appendChild(option);
+            }
+        }
+
+        function closeCalendarModal() { document.getElementById('calendarModal').classList.remove('active'); }
+
+        function addCalendarEvent() {
+            const week = document.getElementById('newEventWeek').value;
+            const type = document.getElementById('newEventType').value;
+            const description = document.getElementById('newEventDesc').value;
+            if (!week || !description) { showToast('⚠ Please select a week and enter a description', 'warning'); return; }
+            const startDate = calculateWeekStartDate(parseInt(week));
+            schoolCalendar.push({ week: parseInt(week), type, description, startDate });
+            schoolCalendar.sort((a, b) => a.week - b.week);
+            document.getElementById('newEventWeek').value = '';
+            document.getElementById('newEventDesc').value = '';
+            renderCalendar();
+            updateWeekBlockHighlights();
+            showToast('📅 Calendar event added', 'success');
+        }
+
+        function calculateWeekStartDate(weekNumber) {
+            const startDate = document.getElementById('courseStartDate').value;
+            if (!startDate) return 'Not set';
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + ((weekNumber - 1) * 7));
+            return date.toISOString().split('T')[0];
+        }
+
+        function renderCalendar() {
+            const tbody = document.getElementById('calendarTableBody');
+            tbody.innerHTML = '';
+            if (schoolCalendar.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;">No events added yet.</td></tr>';
+                return;
+            }
+            schoolCalendar.forEach((event, index) => {
+                const row = document.createElement('tr');
+                const badge = event.type === 'holiday' ? 'holiday-badge' : event.type === 'assessment' ? 'assessment-badge' : '';
+                row.innerHTML = `<td><strong>Week ${event.week}</strong></td><td>${event.startDate}</td><td><span class="${badge}">${event.type.toUpperCase()}</span></td><td>${event.description}</td><td><button class="delete-event-btn" onclick="deleteCalendarEvent(${index})">Delete</button></td>`;
+                tbody.appendChild(row);
+            });
+        }
+
+        function deleteCalendarEvent(index) { schoolCalendar.splice(index, 1); renderCalendar(); updateWeekBlockHighlights(); }
+        function clearCalendar() { if (confirm('Clear all calendar events?')) { schoolCalendar = []; renderCalendar(); updateWeekBlockHighlights(); } }
+
+        function addUKHolidays() {
+            const holidays = [
+                { week: 7, type: 'holiday', description: 'October Half Term' },
+                { week: 15, type: 'holiday', description: 'Christmas Holiday (2 weeks)' },
+                { week: 16, type: 'holiday', description: 'Christmas Holiday (continued)' },
+                { week: 22, type: 'holiday', description: 'February Half Term' },
+                { week: 28, type: 'holiday', description: 'Easter Holiday (2 weeks)' },
+                { week: 29, type: 'holiday', description: 'Easter Holiday (continued)' },
+                { week: 33, type: 'holiday', description: 'May Half Term' }
+            ];
+            holidays.forEach(holiday => { const startDate = calculateWeekStartDate(holiday.week); schoolCalendar.push({ ...holiday, startDate }); });
+            schoolCalendar.sort((a, b) => a.week - b.week);
+            renderCalendar(); updateWeekBlockHighlights();
+            showToast('🗓 UK school holidays added', 'success');
+        }
+
+        function addAssessmentWeeks() {
+            const assessments = [
+                { week: 12, type: 'assessment', description: 'End of Term 1 Assessment' },
+                { week: 24, type: 'assessment', description: 'Mock Exams' },
+                { week: 35, type: 'assessment', description: 'Final Assessments' }
+            ];
+            assessments.forEach(a => { const startDate = calculateWeekStartDate(a.week); schoolCalendar.push({ ...a, startDate }); });
+            schoolCalendar.sort((a, b) => a.week - b.week);
+            renderCalendar(); updateWeekBlockHighlights();
+            showToast('📝 Assessment weeks added', 'success');
+        }
+
+        function updateWeekBlockHighlights() {
+            document.querySelectorAll('.week-block').forEach(block => {
+                block.style.background = 'white';
+                const header = block.querySelector('.week-header');
+                if (header) header.style.background = 'transparent';
+            });
+            schoolCalendar.forEach(event => {
+                document.querySelectorAll(`.week-block[data-week="${event.week}"]`).forEach(block => {
+                    if (event.type === 'holiday') { block.style.background = '#ffebee'; const h = block.querySelector('.week-header'); if (h) h.style.background = '#ffcdd2'; }
+                    else if (event.type === 'assessment') { block.style.background = '#fff9e6'; const h = block.querySelector('.week-header'); if (h) h.style.background = '#fff3cd'; }
+                });
+            });
+        }
+
+        // ─── NOTES ──────────────────────────────────────────────────
+        function openNotesModal() {
+            document.getElementById('notesModal').classList.add('active');
+            document.getElementById('schemeNotes').value = schemeNotes.general || '';
+            document.getElementById('successCriteria').value = schemeNotes.success || '';
+            document.getElementById('risksMitigation').value = schemeNotes.risks || '';
+        }
+        function closeNotesModal() { document.getElementById('notesModal').classList.remove('active'); }
+        function saveNotes() {
+            schemeNotes.general = document.getElementById('schemeNotes').value;
+            schemeNotes.success = document.getElementById('successCriteria').value;
+            schemeNotes.risks = document.getElementById('risksMitigation').value;
+            saveScheduleToLocalStorage();
+            showToast('📝 Notes saved!', 'success');
+            closeNotesModal();
+        }
+
+        // ─── CUSTOM ASSESSMENTS ─────────────────────────────────────
+        function toggleCustomAssessmentForm() { document.getElementById('customAssessmentForm').classList.toggle('show'); }
+
+        function addCustomAssessment() {
+            const title = document.getElementById('customAssessmentTitle').value.trim();
+            const desc = document.getElementById('customAssessmentDesc').value.trim();
+            const level = document.getElementById('customAssessmentLevel').value;
+            if (!title) { showToast('⚠ Please enter an assessment title', 'warning'); return; }
+            const customId = 'ASSESS-CUSTOM-' + Date.now();
+            const assessmentItem = document.createElement('div');
+            assessmentItem.className = 'assessment-item';
+            assessmentItem.dataset.unit = customId;
+            assessmentItem.dataset.level = level;
+            assessmentItem.dataset.type = 'assessment';
+            assessmentItem.innerHTML = `<div class="assessment-item-title">${title}</div><div class="assessment-item-desc">${desc || 'Custom assessment'}</div>`;
+            document.querySelector('.assessment-items').appendChild(assessmentItem);
+            assessmentItem.addEventListener('click', function() {
+                document.querySelectorAll('.subunit-item, .assessment-item').forEach(el => el.classList.remove('selected'));
+                this.classList.add('selected'); selectedTopic = this; enableSelectionMode();
+            });
+            document.getElementById('customAssessmentTitle').value = '';
+            document.getElementById('customAssessmentDesc').value = '';
+            toggleCustomAssessmentForm();
+            filterUnits();
+        }
+
+        // ─── UNIT TOGGLES ───────────────────────────────────────────
+        function toggleUnit(header) {
+            const subunits = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+            subunits.classList.toggle('show');
+            icon.classList.toggle('expanded');
+        }
+        function toggleSubsection(header) {
+            const topics = header.nextElementSibling;
+            const icon = header.querySelector('.subsection-icon');
+            topics.classList.toggle('show');
+            icon.classList.toggle('expanded');
+        }
+
+        // ─── EXPORT/IMPORT ──────────────────────────────────────────
+        function exportData() {
+            const data = exportDataEnhanced();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const schoolName = document.getElementById('schoolName').value || 'school';
+            a.download = `${schoolName.replace(/\s+/g, '-')}-scheme-of-work-${new Date().toISOString().split('T')[0]}.json`;
+            a.click(); URL.revokeObjectURL(url);
+            showToast('💾 Scheme exported successfully!', 'success');
+        }
+
+        function exportDataEnhanced() {
+            const customAssessments = [];
+            document.querySelectorAll('.assessment-item').forEach(item => {
+                if (item.dataset.unit.startsWith('ASSESS-CUSTOM-')) {
+                    customAssessments.push({ id: item.dataset.unit, title: item.querySelector('.assessment-item-title').textContent, desc: item.querySelector('.assessment-item-desc').textContent, level: item.dataset.level });
+                }
+            });
+            const data = {
+                version: '3.0',
+                schoolInfo: {
+                    name: document.getElementById('schoolName').value,
+                    department: document.getElementById('department').value,
+                    academicYear: document.getElementById('academicYear').value,
+                    startDate: document.getElementById('courseStartDate').value,
+                    teacherA: document.getElementById('teacherAName').value,
+                    teacherB: document.getElementById('teacherBName').value
+                },
+                settings: {
+                    weeks: document.getElementById('weeksInput').value,
+                    lessonsPerWeek: document.getElementById('lessonsPerWeek').value,
+                    qualLevel: document.getElementById('qualLevel').value
+                },
+                teacherConfig, calendar: schoolCalendar, notes: schemeNotes, customAssessments, schedule: []
+            };
+            document.querySelectorAll('.week-content').forEach(zone => {
+                const items = Array.from(zone.querySelectorAll('.planned-item')).map(item => ({
+                    unit: item.dataset.unit,
+                    title: item.querySelector('.planned-item-title').textContent,
+                    desc: item.querySelector('.planned-item-desc').textContent,
+                    isAssessment: item.classList.contains('assessment-type')
+                }));
+                if (items.length > 0) {
+                    data.schedule.push({ week: zone.dataset.week, teacher: zone.dataset.teacher, year: zone.dataset.year || 'Y12', items });
+                }
+            });
+            return data;
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file'; input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (data.schoolInfo) {
+                            document.getElementById('schoolName').value = data.schoolInfo.name || '';
+                            document.getElementById('department').value = data.schoolInfo.department || '';
+                            document.getElementById('academicYear').value = data.schoolInfo.academicYear || '';
+                            document.getElementById('courseStartDate').value = data.schoolInfo.startDate || '';
+                            document.getElementById('teacherAName').value = data.schoolInfo.teacherA || '';
+                            document.getElementById('teacherBName').value = data.schoolInfo.teacherB || '';
+                        }
+                        const settings = data.settings || data;
+                        document.getElementById('weeksInput').value = settings.weeks || 36;
+                        document.getElementById('lessonsPerWeek').value = settings.lessonsPerWeek || 6;
+                        document.getElementById('qualLevel').value = settings.qualLevel || 'both';
+
+                        if (data.teacherConfig) {
+                            teacherConfig = data.teacherConfig;
+                            document.getElementById('teacherALessons').value = teacherConfig.A.lessons;
+                            document.getElementById('teacherBLessons').value = teacherConfig.B.lessons;
+                            const toggleA = document.getElementById('teacherAToggle');
+                            const toggleB = document.getElementById('teacherBToggle');
+                            toggleA.classList.toggle('active', teacherConfig.A.enabled);
+                            toggleB.classList.toggle('active', teacherConfig.B.enabled);
+                        }
+                        if (data.calendar) schoolCalendar = data.calendar;
+                        if (data.notes) schemeNotes = data.notes;
+
+                        if (data.customAssessments) {
+                            const container = document.querySelector('.assessment-items');
+                            data.customAssessments.forEach(assessment => {
+                                const assessmentItem = document.createElement('div');
+                                assessmentItem.className = 'assessment-item';
+                                assessmentItem.dataset.unit = assessment.id;
+                                assessmentItem.dataset.level = assessment.level;
+                                assessmentItem.dataset.type = 'assessment';
+                                assessmentItem.innerHTML = `<div class="assessment-item-title">${assessment.title}</div><div class="assessment-item-desc">${assessment.desc}</div>`;
+                                container.appendChild(assessmentItem);
+                                assessmentItem.addEventListener('click', function() {
+                                    document.querySelectorAll('.subunit-item, .assessment-item').forEach(el => el.classList.remove('selected'));
+                                    this.classList.add('selected'); selectedTopic = this; enableSelectionMode();
+                                });
+                            });
+                        }
+
+                        generateWeeks();
+                        filterUnits();
+                        updateTeacherLabels();
+
+                        const schedule = data.schedule || [];
+                        schedule.forEach(weekData => {
+                            const yearAttr = weekData.year || 'Y12';
+                            const zone = document.querySelector(
+                                `.week-content[data-week="${weekData.week}"][data-teacher="${weekData.teacher}"][data-year="${yearAttr}"]`
+                            );
+                            if (zone) {
+                                weekData.items.forEach(itemData => {
+                                    const sourceItem = document.querySelector(
+                                        `.subunit-item[data-unit="${itemData.unit}"], .assessment-item[data-unit="${itemData.unit}"]`
+                                    );
+                                    if (sourceItem) zone.appendChild(createPlannedItem(sourceItem));
+                                    else {
+                                        // Recreate from saved data if source not found
+                                        const ghost = document.createElement('div');
+                                        ghost.className = 'planned-item' + (itemData.isAssessment ? ' assessment-type' : '');
+                                        ghost.draggable = true;
+                                        ghost.dataset.unit = itemData.unit;
+                                        ghost.innerHTML = `<div class="planned-item-content"><div class="planned-item-title">${itemData.title}</div><div class="planned-item-desc">${itemData.desc}</div></div><button class="remove-btn" onclick="removeItem(event,this)">×</button>`;
+                                        setupPlannedItemDrag(ghost);
+                                        zone.appendChild(ghost);
+                                    }
+                                });
+                            }
+                        });
+
+                        setupWeekContentDragDrop();
+                        updateWeekBlockHighlights();
+                        updateStats();
+                        showToast('📂 Scheme imported successfully!', 'success');
+                        showToast('📂 Scheme imported successfully!', 'success');
+                    } catch (error) { showToast('❌ Error importing: ' + error.message, 'error', 5000); }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function exportToPDF() {
+            switchView('overview', activeYear);
+            setTimeout(() => window.print(), 500);
+        }
+
+        function resetSavedData() {
+            if (confirm('This will delete all auto-saved data in this browser. Your exported JSON files will not be affected.\n\nAre you sure?')) {
+                localStorage.removeItem('aqa_sow_schedule');
+                localStorage.removeItem('teacherConfig');
+                ['schoolName','department','academicYear','courseStartDate','teacherAName','teacherBName'].forEach(k => localStorage.removeItem(k));
+                showToast('🗑 Saved data cleared. Reload to start fresh.', 'warning', 5000);
+            }
+        }
+
+        // ─── INIT DRAG-DROP ON WEEK ZONES ───────────────────────────
+        // Called after generateWeeks since zones are recreated
+        const _origGenerateWeeks = generateWeeks;
+        generateWeeks = function() {
+            _origGenerateWeeks();
+            setupWeekContentDragDrop();
+        };
+    </script>
+
+</body>
+</html>
